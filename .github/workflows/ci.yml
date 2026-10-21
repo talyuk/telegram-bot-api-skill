@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"   # Monday 06:00 UTC, so the freshness check keeps reporting
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install the Ed25519 backend
+        run: pip install --quiet cryptography
+
+      - name: Repo shape
+        run: python3 .github/scripts/validate_skills.py
+
+      - name: initData validator fixtures
+        run: python3 skills/telegram-bot-api/scripts/test_initdata.py
+
+      - name: Snapshot freshness (informational)
+        continue-on-error: true
+        run: python3 skills/telegram-bot-api/scripts/tg-api.py version

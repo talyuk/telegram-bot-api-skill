@@ -1,0 +1,22 @@
+{
+  "name": "telegram-bot-api-skill",
+  "owner": {
+    "name": "Alex Talyuk",
+    "url": "https://github.com/talyuk"
+  },
+  "metadata": {
+    "description": "Telegram Bot API reference skill, verified against the live specification",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "telegram-bot-api",
+      "description": "Telegram Bot API and Mini Apps reference: rate limits, file-size ceilings, error classification, parse-mode escaping, initData validation, Stars payments, plus a tool that queries a snapshot parsed from core.telegram.org and refreshes it on demand.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/telegram-bot-api"
+      ]
+    }
+  ]
+}
