@@ -6,7 +6,7 @@ An [Agent Skill](https://agentskills.io) that gives Claude an accurate, current 
 **Telegram Bot API** and **Telegram Mini Apps** — plus a tool that queries a snapshot parsed
 straight from `core.telegram.org` and refreshes it when Telegram ships a release.
 
-Currently tracking **Bot API 10.3** (released 2026-08-24) — 185 methods, 400 types.
+Currently tracking **Bot API 10.4** (released 2026-11-09) — 193 methods, 425 types.
 
 ## Why
 
@@ -65,10 +65,12 @@ skills/telegram-bot-api/
 │   ├── mini-apps.md             initData delivery, both validation schemes, origin
 │   │                            hardening, launch surfaces, WebApp JS version gates
 │   ├── payments.md              Stars vs card rails, invoices, pre-checkout, subscriptions
+│   ├── widgets.md               HTML widgets and TON wallets (10.4): private-chat and
+│   │                            protected-content constraints, answering vs editing
 │   └── versions.md              changelog navigation, 10.x summary, library support
 └── scripts/
     ├── tg-api.py                query + refresh tool
-    ├── spec.json                the parsed snapshot (601 entries, 82 releases)
+    ├── spec.json                the parsed snapshot (633 entries, 83 releases)
     ├── initdata.py              tested initData validator, both schemes
     └── test_initdata.py         its fixtures
 ```
@@ -137,7 +139,7 @@ python3 skills/telegram-bot-api/scripts/test_initdata.py
 
 One thing the skill preserves rather than resolves: paid-broadcast eligibility is stated twice by
 Telegram and the two disagree — the API reference says 10,000 Stars, the FAQ says 100,000 Stars
-*and* 100,000 monthly active users. Still unreconciled as of 10.3, so the skill cites both.
+*and* 100,000 monthly active users. Still unreconciled as of 10.4, so the skill cites both.
 
 ## Contributing
 

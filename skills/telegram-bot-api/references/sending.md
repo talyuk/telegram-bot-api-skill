@@ -53,6 +53,10 @@ Pass `entities` (or `caption_entities`) — an array of `MessageEntity` with exp
 emoji and other astral-plane characters count as 2. This is immune to escaping bugs and
 is the right call when the text is assembled from many untrusted fragments.
 
+A parser that switches exhaustively on `MessageEntity.type` needs the full set — 10.4 added
+`ton_address` and `bank_card_number`. Run `scripts/tg-api.py show MessageEntity` for the
+current list rather than hardcoding one.
+
 ## Custom emoji and user mentions
 
 `tg://user?id=<user_id>` mentions a user without a username, but **only** inside an
@@ -136,3 +140,7 @@ d:<draft>:<field>:<value_id>      # 1-2 char verb, ids only
 a failure.
 
 `deleteMessages` / `forwardMessages` / `copyMessages` take 1–100 ids per call.
+
+**Widget messages cannot be copied** with `copyMessage` or `copyMessages`, and are always sent
+with protected content so they cannot be forwarded either (Bot API 10.4 — see `widgets.md`). A
+broadcast built on `copyMessage` silently cannot carry one.

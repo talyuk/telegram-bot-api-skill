@@ -21,16 +21,27 @@ This is how `CopyTextButton` gets misattributed.
 
 | Version | Date | Theme |
 |---|---|---|
-| **10.3** | 2026-08-24 | Rich message buttons; `EphemeralMessageParameters` replaces the per-method ephemeral params; `DisabledButton` and `InlineKeyboardButton.disabled`; `force_reply` on both keyboard markups; `MessageGenerationStopped`; `CommunityChatJoined` |
+| **10.4** | 2026-11-09 | HTML widgets and TON wallets (8 methods, 27 types — see `widgets.md`); `StoryAreaPosition` renamed `AreaPosition`; ephemeral replies relaxed; `ton_address` and `bank_card_number` entity types; rich-message quoting |
+| 10.3 | 2026-08-24 | Rich message buttons; `EphemeralMessageParameters` replaces the per-method ephemeral params; `DisabledButton` and `InlineKeyboardButton.disabled`; `force_reply` on both keyboard markups; `MessageGenerationStopped`; `CommunityChatJoined` |
 | 10.2 | 2026-07-14 | Ephemeral messages; rich message blocks; `BotSubscriptionUpdated` + `Update.subscription`; **Mini App origin hardening** |
 | 10.1 | 2026-06-11 | `chat_join_request_query_id` on `WebAppInitData` |
 | 10.0 | 2026-05-08 | Poll overhaul (min options 2→1, media in options); communities |
 
-### 10.3 breaking-ish change
+### Two renames and a three-release churn
 
-The ephemeral-message parameters `receiver_user_id` and `callback_query_id`, added to
-thirteen send methods in 10.2, were **replaced** one release later by a single
-`ephemeral_message_parameters` object. Code written against 10.2 needs updating.
+**`StoryAreaPosition` became `AreaPosition` in 10.4**, because it now also positions stickers
+on TON wallet cards. A rename is a break: code referencing the old name stops compiling or
+deserializing.
+
+The ephemeral-message surface has moved in each of the last three releases:
+
+| Release | State |
+|---|---|
+| 10.2 | `receiver_user_id` and `callback_query_id` added as parameters to thirteen send methods |
+| 10.3 | Both **replaced** by a single `ephemeral_message_parameters` object |
+| 10.4 | `callback_query_id` alone now works in any chat except channel direct-messages chats; `receiver_user_id` and the methods' `chat_id` are both optional |
+
+Code written against any one of those three needs checking against the others.
 
 ## Things that have not changed in years
 
@@ -43,14 +54,17 @@ models' cutoffs. Verify anything in that group against the live spec.
 
 ## Library → Bot API support
 
-Verified 2026-09-20. A library one release behind cannot see the newest types at all —
-the update field simply does not deserialize.
+Verified 2026-11-09, the day 10.4 shipped. A library one release behind cannot see the newest
+types at all — the update field simply does not deserialize.
+
+**Nothing supports 10.4 yet.** Until a library catches up, `widget_query` and the TON types are
+reachable only by calling the HTTP API directly.
 
 | Library | Version | Bot API | Notes |
 |---|---|---|---|
-| aiogram (Python) | 3.31.0 | **10.3** | Default branch is `dev-3.x`, not `main`. Tracks releases within days. Requires Python ≥3.10. |
+| aiogram (Python) | 3.31.0 | **10.3** | Default branch is `dev-3.x`, not `main`. Historically tracks releases within days, so check again rather than trusting this row. Requires Python ≥3.10. |
 | python-telegram-bot | 22.8 | trails | Check its README's "all types and methods of Bot API X" line before relying on a recent type. |
-| grammY (TS/JS) | 1.46.0 | tracks closely | `@grammyjs/types` carries the surface. |
+| grammY (TS/JS) | 1.46.0 | trails | `@grammyjs/types` carries the surface. |
 | telegraf (TS/JS) | 4.16.3 | trails significantly | Verify before choosing it for anything recent. |
 
 Re-check rather than trust this table:

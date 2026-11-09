@@ -5,7 +5,7 @@ description: Use when writing or debugging anything against the Telegram Bot API
 
 # Telegram Bot API
 
-Snapshot: **Bot API 10.3, released 2026-08-24.** 185 methods, 400 types.
+Snapshot: **Bot API 10.4, released 2026-11-09.** 193 methods, 425 types.
 
 ## Look it up; do not recall it
 
@@ -48,6 +48,8 @@ Every row below was answered wrongly by a competent agent working from memory.
 | `signature` is excluded from the initData HMAC | Only **`hash`** is. `signature` is signed data. (The *Ed25519* check excludes both.) |
 | Bot API 8.0 shipped around Aug 2024 | **2024-11-17.** |
 | `allowed_updates` defaults to everything | It defaults to the **previous** value, and never includes `chat_member`, `message_reaction`, `message_reaction_count` unless asked. |
+| `answerWidgetQuery` updates the widget | It does **not**. It replies to the query only; `editMessageWidgetData` changes what the widget shows. |
+| Your library supports the newest release | As of 10.4's release day, **none did**. Check `__api_version__` before using a new type. |
 
 Transcribe the Ed25519 public keys from `references/mini-apps.md`; never retype them.
 A key one byte short rejects every payload — with a clear length error in Python,
@@ -63,6 +65,7 @@ but as an ordinary signature mismatch in looser stacks.
 | `references/updates.md` | Polling vs webhooks, `allowed_updates`, the full `Update` field list, offsets, command scopes |
 | `references/mini-apps.md` | initData delivery and both validation schemes, origin hardening, launch surfaces, WebApp JS version gates |
 | `references/payments.md` | Stars vs card rails, invoice flow, pre-checkout, subscriptions, refunds |
+| `references/widgets.md` | HTML widgets and TON wallets (10.4): the private-chat/protected-content constraints, answering vs editing, widget rate limits |
 | `references/versions.md` | Changelog navigation, 10.x summary, library → Bot API support |
 | `scripts/tg-api.py` | The query/refresh tool above |
 | `scripts/initdata.py` | Tested initData validator, both schemes |
@@ -84,6 +87,8 @@ but as an ordinary signature mismatch in looser stacks.
 - **`answerCallbackQuery` on every callback**, even a no-op, or the client spins.
 - **Never trust `initDataUnsafe`** for authorization, and never let an iframe call
   `window.Telegram.WebApp` — origin hardening has been enforced since 2026-07-20.
+- **Check library support before using anything from the newest release.** aiogram's
+  `__api_version__` is the honest answer; a type the library lacks does not deserialize at all.
 
 ## Red flags
 

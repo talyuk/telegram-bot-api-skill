@@ -33,7 +33,7 @@ and keep it in one constant shared by both call sites.
 Adding a feature (payments, subscriptions, reactions) means adding its update type here.
 A handler that never fires is usually this, not a routing bug.
 
-`Update` carries `update_id` plus **at most one** optional field. As of 10.3:
+`Update` carries `update_id` plus **at most one** optional field. As of 10.4 there are 29 of them:
 
 ```
 message  edited_message  channel_post  edited_channel_post  business_connection
@@ -42,7 +42,10 @@ message_reaction  message_reaction_count  inline_query  chosen_inline_result
 callback_query  shipping_query  pre_checkout_query  purchased_paid_media  poll
 poll_answer  my_chat_member  chat_member  chat_join_request  chat_boost
 removed_chat_boost  managed_bot  subscription  stopped_message_generation
+widget_query  shared_widget_query
 ```
+
+`widget_query` and `shared_widget_query` are new in 10.4 — see `widgets.md`.
 
 Regenerate with `scripts/tg-api.py show Update`.
 

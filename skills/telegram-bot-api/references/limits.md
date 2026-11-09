@@ -1,6 +1,6 @@
 # Limits — rate, size, length
 
-Every number here is quoted from `core.telegram.org` as of Bot API 10.3 (2026-08-24).
+Every number here is quoted from `core.telegram.org` as of Bot API 10.4 (2026-11-09).
 Regenerate the length table with `scripts/tg-api.py show <method>`.
 
 ## 1. Rate limits: what is official and what is not
@@ -32,7 +32,7 @@ cap to **1000 messages/second**, at **0.1 Stars per message** beyond the free 30
 withdrawn from the bot's Star balance. Only successfully broadcast messages are charged.
 
 **The eligibility threshold is stated twice, and the two statements disagree. Still
-unresolved as of 10.3 — do not quote one without the other:**
+unresolved as of 10.4 — do not quote one without the other:**
 
 | Source | Requirement |
 |---|---|
@@ -104,5 +104,8 @@ fits in ASCII can overflow once a city name lands in it, and it fails at send ti
 - An ephemeral message may be sent within **15 seconds** of the triggering callback
   query or ephemeral message, unless the bot is a chat administrator.
 - `answerInlineQuery.cache_time` defaults to 300 s.
+- **Widget queries: 5 per 5 seconds per user**, across all of the bot's widgets, and
+  `answerWidgetQuery` must answer within 15 s. Unlike the send-rate figures above, these are
+  stated in the API reference itself (Bot API 10.4 — see `widgets.md`).
 - A story can hold ≤10 location areas, ≤5 suggested reactions, ≤3 link areas,
   ≤3 weather areas.
