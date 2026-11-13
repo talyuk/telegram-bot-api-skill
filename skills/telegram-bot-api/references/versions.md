@@ -17,6 +17,11 @@ The changelog is **reverse-chronological**. When dating a feature, take the **la
 mention of it, not the first — the first match is the most recent time it was touched.
 This is how `CopyTextButton` gets misattributed.
 
+Search for the class and field together, not the field name alone. Field names get reused
+across classes: `subscription_period` first appears in 7.9 on `ChatInviteLink` (paid channel
+invites), but `createInvoiceLink.subscription_period` — Stars subscription invoices — is 8.0.
+Searching for the bare name dates the wrong feature.
+
 ## Bot API 10.x
 
 | Version | Date | Theme |
@@ -54,23 +59,25 @@ models' cutoffs. Verify anything in that group against the live spec.
 
 ## Library → Bot API support
 
-Verified 2026-11-09, the day 10.4 shipped. A library one release behind cannot see the newest
-types at all — the update field simply does not deserialize.
+Verified 2026-11-13. A library one release behind cannot see the newest types at all — the
+update field simply does not deserialize.
 
-**Nothing supports 10.4 yet.** Until a library catches up, `widget_query` and the TON types are
-reachable only by calling the HTTP API directly.
+**Nothing supports 10.4 yet.** aiogram and grammY both have 10.4 support open as a pull request;
+until one ships, `widget_query` and the TON types are reachable only through the HTTP API.
 
 | Library | Version | Bot API | Notes |
 |---|---|---|---|
-| aiogram (Python) | 3.31.0 | **10.3** | Default branch is `dev-3.x`, not `main`. Historically tracks releases within days, so check again rather than trusting this row. Requires Python ≥3.10. |
-| python-telegram-bot | 22.8 | trails | Check its README's "all types and methods of Bot API X" line before relying on a recent type. |
-| grammY (TS/JS) | 1.46.0 | trails | `@grammyjs/types` carries the surface. |
-| telegraf (TS/JS) | 4.16.3 | trails significantly | Verify before choosing it for anything recent. |
+| aiogram (Python) | 3.31.0 | **10.3** | Usually ships within days of a release. Default branch is `dev-3.x`, not `main`. Python ≥3.10. |
+| grammY (TS/JS) | 1.46.0 | **10.3** | Merged 10.3 support one day after the release. The surface lives in `@grammyjs/types`, whose README still says "Bot API 5.1" — old prose, not a support claim. |
+| python-telegram-bot | 22.8 | **10.0** | Four releases behind; nothing from 10.1–10.4 merged. |
+| telegraf (TS/JS) | 4.16.3 | **7.1** | Per its README badge. No Stars subscription invoices (8.0), ephemeral messages (10.2) or widgets (10.4). |
 
-Re-check rather than trust this table:
+Re-check rather than trust this table. A package version says nothing about API support, so
+each of these reads the supported API version itself:
 
 ```bash
 curl -s https://raw.githubusercontent.com/aiogram/aiogram/dev-3.x/aiogram/__meta__.py | grep api_version
-curl -s https://pypi.org/pypi/python-telegram-bot/json | python3 -c 'import sys,json;print(json.load(sys.stdin)["info"]["version"])'
-curl -s https://registry.npmjs.org/grammy/latest | python3 -c 'import sys,json;print(json.load(sys.stdin)["version"])'
+gh search prs --repo grammyjs/types "support Bot API" --merged --sort updated --limit 1 --json title -q '.[0].title'
+curl -s https://raw.githubusercontent.com/python-telegram-bot/python-telegram-bot/master/README.rst | grep -o 'Telegram Bot API \*\*[0-9.]*\*\*'
+curl -s https://raw.githubusercontent.com/telegraf/telegraf/v4/README.md | grep -o 'Bot API [0-9][0-9.]*' | head -1
 ```
